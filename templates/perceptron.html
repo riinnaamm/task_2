@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Перцептрон Розенблатта</h2>
+
+<p>
+    Завантажте навчальні зображення двох класів
+    та одне тестове зображення.
+</p>
+
+
+{% if error %}
+
+<div class="error">
+    {{ error }}
+</div>
+
+{% endif %}
+
+
+<form method="POST"
+      enctype="multipart/form-data">
+
+    <h3>Клас 1</h3>
+
+    <input type="file"
+           name="class1"
+           accept="image/*"
+           multiple
+           required>
+
+
+    <h3>Клас 2</h3>
+
+    <input type="file"
+           name="class2"
+           accept="image/*"
+           multiple
+           required>
+
+
+    <h3>Тестове зображення</h3>
+
+    <input type="file"
+           name="test"
+           accept="image/*"
+           required>
+
+
+    <h3>Параметри навчання</h3>
+
+    <label>
+        Крок навчання:
+    </label>
+
+    <input type="number"
+           name="learning_rate"
+           value="0.1"
+           step="0.01"
+           min="0.01">
+
+
+    <br><br>
+
+
+    <label>
+        Максимальна кількість епох:
+    </label>
+
+    <input type="number"
+           name="epochs"
+           value="20"
+           min="1">
+
+
+    <br><br>
+
+
+    <button type="submit">
+        Запустити перцептрон
+    </button>
+
+</form>
+
+
+{% if result %}
+
+<hr>
+
+<h2>Результат</h2>
+
+
+<h3>Класифікація тестового зображення</h3>
+
+{% if result.prediction == 1 %}
+
+<p class="result">
+    Тестовий образ належить до <b>Класу 2</b>.
+</p>
+
+{% else %}
+
+<p class="result">
+    Тестовий образ належить до <b>Класу 1</b>.
+</p>
+
+{% endif %}
+
+
+<h3>Стан навчання</h3>
+
+<p>
+    Кількість епох:
+    <b>{{ result.epochs }}</b>
+</p>
+
+<p>
+    Збіжність:
+
+    {% if result.converged %}
+
+        <b>досягнута</b>
+
+    {% else %}
+
+        <b>не досягнута</b>
+
+    {% endif %}
+
+</p>
+
+
+<h3>Значення ваг</h3>
+
+<pre>{{ result.weights }}</pre>
+
+
+<h3>Bias</h3>
+
+<pre>{{ result.bias }}</pre>
+
+
+<h3>Перші значення тестового вектора</h3>
+
+<pre>{{ result.test_vector }}</pre>
+
+
+<h3>Процес навчання</h3>
+
+<table>
+
+<tr>
+
+    <th>Епоха</th>
+
+    <th>Зразок</th>
+
+    <th>Бажаний результат</th>
+
+    <th>Отриманий результат</th>
+
+    <th>Помилка</th>
+
+</tr>
+
+
+{% for row in result.history %}
+
+<tr>
+
+    <td>{{ row.epoch }}</td>
+
+    <td>{{ row.sample }}</td>
+
+    <td>{{ row.desired }}</td>
+
+    <td>{{ row.output }}</td>
+
+    <td>{{ row.error }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endif %}
+
+{% endblock %}

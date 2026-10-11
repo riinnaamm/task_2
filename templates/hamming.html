@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Мережа Хемінга</h2>
+
+<p>
+    Завантажте 3 еталонні зображення
+    та одне тестове.
+</p>
+
+
+{% if error %}
+
+<div class="error">
+    {{ error }}
+</div>
+
+{% endif %}
+
+
+<form method="POST"
+      enctype="multipart/form-data">
+
+    <h3>Еталонні образи</h3>
+
+    <input type="file"
+           name="patterns"
+           accept="image/*"
+           multiple
+           required>
+
+
+    <h3>Тестове зображення</h3>
+
+    <input type="file"
+           name="test"
+           accept="image/*"
+           required>
+
+
+    <br><br>
+
+    <button type="submit">
+        Запустити мережу Хемінга
+    </button>
+
+</form>
+
+
+{% if result %}
+
+<hr>
+
+<h2>Результат</h2>
+
+
+<h3>Визначений клас</h3>
+
+<p class="result">
+
+    Тестовий образ належить до
+    <b>Класу {{ result.class }}</b>.
+
+</p>
+
+
+<h3>Коефіцієнт ε</h3>
+
+<pre>{{ result.epsilon }}</pre>
+
+
+<h3>Результат першого шару</h3>
+
+<pre>{{ result.first_layer }}</pre>
+
+
+<h3>Результат другого шару</h3>
+
+<pre>{{ result.second_layer }}</pre>
+
+
+<h3>Розмір матриці ваг</h3>
+
+<pre>{{ result.weights_size }}</pre>
+
+
+<h3>Перші значення тестового вектора</h3>
+
+<pre>{{ result.test_vector }}</pre>
+
+{% endif %}
+
+{% endblock %}
